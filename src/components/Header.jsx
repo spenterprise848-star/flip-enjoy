@@ -20,7 +20,7 @@ export const Header = () => {
   const isChangeAddress = path === "/checkout/change-address";
   const isSummary = path === "/checkout/summary";
   const isPayment = path === "/checkout/payment";
-  const isSuccess = path === "/checkout/success";
+  const isSuccess = path === "/success" || path === "/checkout/success";
 
   const isCheckout = isCart || isAddress || isChangeAddress || isSummary || isPayment || isSuccess;
 

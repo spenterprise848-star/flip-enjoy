@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { AppProvider, AppContext } from "./context/AppContext";
 
 // Components
@@ -165,7 +165,8 @@ const AppContent = () => {
     "/checkout/change-address",
     "/checkout/summary",
     "/checkout/payment",
-    "/checkout/success"
+    "/checkout/success",
+    "/success"
   ];
   const shouldShowFooter = !hideFooterPaths.includes(location.pathname);
 
@@ -202,7 +203,8 @@ const AppContent = () => {
           <Route path="/checkout/summary" element={<OrderSummary />} />
           <Route path="/checkout/payment" element={<Payment />} />
           <Route path="/checkout/verify" element={<PaymentVerify />} />
-          <Route path="/checkout/success" element={<OrderSuccess />} />
+          <Route path="/checkout/success" element={<Navigate to="/success" replace />} />
+          <Route path="/success" element={<OrderSuccess />} />
           <Route path="/info/:slug" element={<InfoPage />} />
           <Route path="/admin/settings" element={<Settings />} />
         </Routes>

@@ -238,7 +238,7 @@ app.get(['/api/razorpay_verify.php', '/razorpay_verify.php'], (req, res) => {
     return res.redirect(`${redirectBase}/checkout/payment?status=failed`);
   }
 
-  res.redirect(`${redirectBase}/checkout/success`);
+  res.redirect(`${redirectBase}/success`);
 });
 
 // 6. POST /api/payment/verify (legacy, kept for safety)

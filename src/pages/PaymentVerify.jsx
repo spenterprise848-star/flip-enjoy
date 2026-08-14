@@ -44,7 +44,7 @@ export const PaymentVerify = () => {
       localStorage.setItem("successAmount", String(amount));
       
       // Navigate to success screen
-      navigate("/checkout/success", { replace: true });
+      navigate("/success", { replace: true });
       return;
     }
 

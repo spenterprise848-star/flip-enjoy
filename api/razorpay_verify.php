@@ -32,6 +32,6 @@ if (empty($paymentId) || $paymentLinkStatus !== 'paid') {
 }
 
 // 🎉 જો સ્ટેટસ 'paid' મળી જાય તો પેમેન્ટ સફળ છે, થેન્ક્યુ પેજ પર મોકલો
-header('Location: ' . $baseUrl . '/checkout/success');
+header('Location: ' . $baseUrl . '/success');
 exit;
 ?>
