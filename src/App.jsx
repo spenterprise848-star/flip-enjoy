@@ -29,65 +29,91 @@ const AppContent = () => {
 
   // Dynamic script injection for Analytics and Facebook Pixel
   useEffect(() => {
-    fetch("/api/settings")
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch settings");
-        return res.json();
-      })
-      .then((data) => {
-        // 1. Google Analytics Setup
-        if (data.googleAnalyticsId) {
-          const gaRaw = data.googleAnalyticsId;
-          const gaMatch = gaRaw.match(/(G-[A-Z0-9]+|UA-\d+-\d+|AW-\d+)/i);
-          const gaId = gaMatch ? gaMatch[0] : gaRaw.trim();
+    const initializeAnalytics = (settings) => {
+      // 1. Google Analytics Setup
+      if (settings.googleAnalyticsId) {
+        const gaRaw = settings.googleAnalyticsId;
+        const gaMatch = gaRaw.match(/(G-[A-Z0-9]+|UA-\d+-\d+|AW-\d+)/i);
+        const gaId = gaMatch ? gaMatch[0] : gaRaw.trim();
 
-          if (gaId && !document.getElementById("google-analytics-script")) {
-            const script = document.createElement("script");
-            script.id = "google-analytics-script";
-            script.async = true;
-            script.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
-            document.head.appendChild(script);
+        if (gaId && !document.getElementById("google-analytics-script")) {
+          const script = document.createElement("script");
+          script.id = "google-analytics-script";
+          script.async = true;
+          script.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
+          document.head.appendChild(script);
 
-            const inlineScript = document.createElement("script");
-            inlineScript.id = "google-analytics-inline-script";
-            inlineScript.innerHTML = `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${gaId}');
-            `;
-            document.head.appendChild(inlineScript);
-            console.log(`[Analytics] Google Analytics (${gaId}) initialized.`);
-          }
+          const inlineScript = document.createElement("script");
+          inlineScript.id = "google-analytics-inline-script";
+          inlineScript.innerHTML = `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${gaId}');
+          `;
+          document.head.appendChild(inlineScript);
+          console.log(`[Analytics] Google Analytics (${gaId}) initialized.`);
         }
+      }
 
-        // 2. Facebook Pixel Setup
-        if (data.facebookPixelId) {
-          const fbRaw = data.facebookPixelId;
-          const fbMatch = fbRaw.match(/(\d{15,16})/);
-          const fbId = fbMatch ? fbMatch[0] : fbRaw.trim();
+      // 2. Facebook Pixel Setup
+      if (settings.facebookPixelId) {
+        const fbRaw = settings.facebookPixelId;
+        const fbMatch = fbRaw.match(/(\d{15,16})/);
+        const fbId = fbMatch ? fbMatch[0] : fbRaw.trim();
 
-          if (fbId && !document.getElementById("facebook-pixel-script")) {
-            const inlineScript = document.createElement("script");
-            inlineScript.id = "facebook-pixel-script";
-            inlineScript.innerHTML = `
-              !function(f,b,e,v,n,t,s)
-              {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-              n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-              if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-              n.queue=[];t=b.createElement(e);t.async=!0;
-              t.src=v;s=b.getElementsByTagName(e)[0];
-              s.parentNode.insertBefore(t,s)}(window, document,'script',
-              'https://connect.facebook.net/en_US/fbevents.js');
-              fbq('init', '${fbId}');
-              fbq('track', 'PageView');
-            `;
-            document.head.appendChild(inlineScript);
-            console.log(`[Analytics] Facebook Pixel (${fbId}) initialized.`);
-          }
+        if (fbId && !document.getElementById("facebook-pixel-script")) {
+          const inlineScript = document.createElement("script");
+          inlineScript.id = "facebook-pixel-script";
+          inlineScript.innerHTML = `
+            !function(f,b,e,v,n,t,s)
+            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+            n.queue=[];t=b.createElement(e);t.async=!0;
+            t.src=v;s=b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t,s)}(window, document,'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+            fbq('init', '${fbId}');
+            fbq('track', 'PageView');
+          `;
+          document.head.appendChild(inlineScript);
+          console.log(`[Analytics] Facebook Pixel (${fbId}) initialized.`);
         }
-      })
-      .catch((err) => console.error("Error loading analytics:", err));
+      }
+    };
+
+    const envGoogleId = import.meta.env.VITE_GOOGLE_ANALYTICS_ID;
+    const envFacebookId = import.meta.env.VITE_FACEBOOK_PIXEL_ID;
+
+    if (envGoogleId || envFacebookId) {
+      initializeAnalytics({
+        googleAnalyticsId: envGoogleId || "",
+        facebookPixelId: envFacebookId || ""
+      });
+      // Fetch fallback settings if one of them is missing from env
+      if (!envGoogleId || !envFacebookId) {
+        fetch("/api/settings")
+          .then((res) => res.ok ? res.json() : {})
+          .then((data) => {
+            initializeAnalytics({
+              googleAnalyticsId: envGoogleId || data.googleAnalyticsId || "",
+              facebookPixelId: envFacebookId || data.facebookPixelId || ""
+            });
+          })
+          .catch((err) => console.error("Error loading fallback analytics:", err));
+      }
+    } else {
+      fetch("/api/settings")
+        .then((res) => {
+          if (!res.ok) throw new Error("Failed to fetch settings");
+          return res.json();
+        })
+        .then((data) => {
+          initializeAnalytics(data);
+        })
+        .catch((err) => console.error("Error loading analytics:", err));
+    }
   }, []);
 
   // Track PageView on route changes
