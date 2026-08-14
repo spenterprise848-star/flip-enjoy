@@ -29,9 +29,12 @@ const AppContent = () => {
 
   // Dynamic script injection for Analytics and Facebook Pixel
   useEffect(() => {
-    fetch("/api/settings")
+    fetch("/settings.json")
       .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch settings");
+        if (!res.ok) {
+          // Fallback to cPanel API if static settings.json is not present
+          return fetch("/api/settings").then((r) => r.json());
+        }
         return res.json();
       })
       .then((data) => {

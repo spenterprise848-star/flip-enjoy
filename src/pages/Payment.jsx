@@ -19,13 +19,16 @@ export const Payment = () => {
 
   // Fetch settings to get dynamic UPI ID
   useEffect(() => {
-    fetch("/api/settings")
+    fetch("/settings.json")
       .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch settings");
+        if (!res.ok) {
+          // Fallback to cPanel API if static settings.json is not present
+          return fetch("/api/settings").then((r) => r.json());
+        }
         return res.json();
       })
       .then((data) => {
-        if (data.upiId !== undefined) {
+        if (data && data.upiId !== undefined) {
           setUpiId(data.upiId);
         }
       })
