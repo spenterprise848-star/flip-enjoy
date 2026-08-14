@@ -51,7 +51,8 @@ function getSettings() {
         "razorpayKeyId" => $env["RAZORPAY_KEY_ID"] ?? "rzp_live_T5YEpYQVLQJfpN",
         "razorpayKeySecret" => $env["RAZORPAY_KEY_SECRET"] ?? "54feYtdXQGRcRkCEbEOS07IC",
         "facebookPixelId" => "",
-        "googleAnalyticsId" => ""
+        "googleAnalyticsId" => "",
+        "googleAdsId" => ""
     ];
 }
 
@@ -85,6 +86,7 @@ if (preg_match('/\/api\/settings$/', $path)) {
             "razorpayKeyId" => $config["razorpayKeyId"],
             "facebookPixelId" => $config["facebookPixelId"] ?? "",
             "googleAnalyticsId" => $config["googleAnalyticsId"] ?? "",
+            "googleAdsId" => $config["googleAdsId"] ?? "",
             "upiId" => $config["upiId"] ?? "paytmqr5k5czz@ptys"
         ]);
         exit;
@@ -100,7 +102,9 @@ if (preg_match('/\/api\/settings$/', $path)) {
             "razorpayKeyId" => trim($input["razorpayKeyId"] ?? ""),
             "razorpayKeySecret" => trim($input["razorpayKeySecret"] ?? ""),
             "facebookPixelId" => trim($input["facebookPixelId"] ?? ""),
-            "googleAnalyticsId" => trim($input["googleAnalyticsId"] ?? "")
+            "googleAnalyticsId" => trim($input["googleAnalyticsId"] ?? ""),
+            "googleAdsId" => trim($input["googleAdsId"] ?? ""),
+            "upiId" => trim($input["upiId"] ?? "paytmqr5k5czz@ptys")
         ];
         $saved = false;
         if (@file_put_contents($settingsPath, json_encode($newConfig, JSON_PRETTY_PRINT)) !== false) {

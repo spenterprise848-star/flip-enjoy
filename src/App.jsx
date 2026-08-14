@@ -38,30 +38,38 @@ const AppContent = () => {
         return res.json();
       })
       .then((data) => {
-        // 1. Google Analytics Setup
-        if (data.googleAnalyticsId) {
-          const gaRaw = data.googleAnalyticsId;
-          const gaMatch = gaRaw.match(/(G-[A-Z0-9]+|UA-\d+-\d+|AW-\d+)/i);
-          const gaId = gaMatch ? gaMatch[0] : gaRaw.trim();
+        // 1. Google Analytics & Ads Setup
+        const gaIdRaw = data.googleAnalyticsId || "";
+        const adsIdRaw = data.googleAdsId || "";
+        
+        const gaId = gaIdRaw ? (gaIdRaw.match(/(G-[A-Z0-9]+|UA-\d+-\d+|AW-\d+)/i) || [gaIdRaw])[0].trim() : "";
+        const adsId = adsIdRaw ? (adsIdRaw.match(/(G-[A-Z0-9]+|UA-\d+-\d+|AW-\d+)/i) || [adsIdRaw])[0].trim() : "";
+        
+        const primaryId = gaId || adsId;
 
-          if (gaId && !document.getElementById("google-analytics-script")) {
-            const script = document.createElement("script");
-            script.id = "google-analytics-script";
-            script.async = true;
-            script.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
-            document.head.appendChild(script);
+        if (primaryId && !document.getElementById("google-analytics-script")) {
+          const script = document.createElement("script");
+          script.id = "google-analytics-script";
+          script.async = true;
+          script.src = `https://www.googletagmanager.com/gtag/js?id=${primaryId}`;
+          document.head.appendChild(script);
 
-            const inlineScript = document.createElement("script");
-            inlineScript.id = "google-analytics-inline-script";
-            inlineScript.innerHTML = `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${gaId}');
-            `;
-            document.head.appendChild(inlineScript);
-            console.log(`[Analytics] Google Analytics (${gaId}) initialized.`);
+          const inlineScript = document.createElement("script");
+          inlineScript.id = "google-analytics-inline-script";
+          let inlineHTML = `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+          `;
+          if (gaId) {
+            inlineHTML += `\n            gtag('config', '${gaId}');`;
           }
+          if (adsId) {
+            inlineHTML += `\n            gtag('config', '${adsId}');`;
+          }
+          inlineScript.innerHTML = inlineHTML;
+          document.head.appendChild(inlineScript);
+          console.log(`[Analytics] Google gtag initialized with Analytics (${gaId || 'none'}) and Ads (${adsId || 'none'}).`);
         }
 
         // 2. Facebook Pixel Setup

@@ -7,6 +7,7 @@ export const Settings = () => {
   const [razorpayKeySecret, setRazorpayKeySecret] = useState("");
   const [facebookPixelId, setFacebookPixelId] = useState("");
   const [googleAnalyticsId, setGoogleAnalyticsId] = useState("");
+  const [googleAdsId, setGoogleAdsId] = useState("");
   const [upiId, setUpiId] = useState("");
   
   const [loading, setLoading] = useState(false);
@@ -25,6 +26,7 @@ export const Settings = () => {
         setRazorpayKeySecret(data.razorpayKeySecret || "");
         setFacebookPixelId(data.facebookPixelId || "");
         setGoogleAnalyticsId(data.googleAnalyticsId || "");
+        setGoogleAdsId(data.googleAdsId || "");
         setUpiId(data.upiId || "");
         setFetching(false);
       })
@@ -50,6 +52,7 @@ export const Settings = () => {
         razorpayKeySecret,
         facebookPixelId,
         googleAnalyticsId,
+        googleAdsId,
         upiId,
       }),
     })
@@ -155,6 +158,17 @@ export const Settings = () => {
                   className="w-full h-20 border border-gray-300 rounded-[4px] p-3 text-xs outline-none focus:border-flip-blue transition bg-white resize-none"
                   value={googleAnalyticsId}
                   onChange={(e) => setGoogleAnalyticsId(e.target.value)}
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-semibold text-gray-500 uppercase mb-1">Google Ads Tag / ID</label>
+                <input
+                  type="text"
+                  placeholder="Paste your Google Ads Tag ID (e.g. AW-17983064076)"
+                  className="w-full h-11 border border-gray-300 rounded-[4px] px-3 text-xs outline-none focus:border-flip-blue transition bg-white"
+                  value={googleAdsId}
+                  onChange={(e) => setGoogleAdsId(e.target.value)}
                 />
               </div>
 
