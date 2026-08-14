@@ -67,6 +67,12 @@ const AppContent = () => {
           if (adsId) {
             inlineHTML += `\n            gtag('config', '${adsId}');`;
           }
+          if (gaId) {
+            localStorage.setItem("googleAnalyticsId", gaId);
+          }
+          if (adsId) {
+            localStorage.setItem("googleAdsId", adsId);
+          }
           inlineScript.innerHTML = inlineHTML;
           document.head.appendChild(inlineScript);
           console.log(`[Analytics] Google gtag initialized with Analytics (${gaId || 'none'}) and Ads (${adsId || 'none'}).`);
@@ -104,9 +110,27 @@ const AppContent = () => {
   // Track PageView on route changes
   useEffect(() => {
     if (window.gtag) {
-      window.gtag("event", "page_view", {
-        page_path: location.pathname + location.search,
-      });
+      const gaId = localStorage.getItem("googleAnalyticsId");
+      const adsId = localStorage.getItem("googleAdsId");
+
+      if (gaId) {
+        window.gtag("event", "page_view", {
+          send_to: gaId,
+          page_path: location.pathname + location.search,
+        });
+      }
+      if (adsId) {
+        window.gtag("event", "page_view", {
+          send_to: adsId,
+          page_path: location.pathname + location.search,
+        });
+      }
+
+      if (!gaId && !adsId) {
+        window.gtag("event", "page_view", {
+          page_path: location.pathname + location.search,
+        });
+      }
     }
     if (window.fbq) {
       window.fbq("track", "PageView");

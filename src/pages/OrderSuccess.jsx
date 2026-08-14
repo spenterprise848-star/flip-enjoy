@@ -8,6 +8,31 @@ export const OrderSuccess = () => {
 
   useEffect(() => {
     clearCart();
+
+    // Retrieve tracking properties
+    const storedOrderId = localStorage.getItem("successOrderNumber") || "OD" + Math.floor(1000000000 + Math.random() * 9000000000);
+    const storedAmount = localStorage.getItem("successAmount") || "0";
+    const adsId = localStorage.getItem("googleAdsId");
+
+    // 1. Google Ads Conversion Event
+    if (window.gtag && adsId) {
+      window.gtag("event", "conversion", {
+        send_to: adsId,
+        value: parseFloat(storedAmount) || 0,
+        currency: "INR",
+        transaction_id: storedOrderId
+      });
+      console.log(`[Google Ads] Conversion event sent to ${adsId} (Value: ${storedAmount}, Order ID: ${storedOrderId})`);
+    }
+
+    // 2. Facebook Pixel Purchase Event
+    if (window.fbq) {
+      window.fbq("track", "Purchase", {
+        value: parseFloat(storedAmount) || 0,
+        currency: "INR"
+      });
+      console.log(`[Facebook Pixel] Purchase conversion event sent (Value: ${storedAmount})`);
+    }
   }, [clearCart]);
 
   // Retrieve values from localStorage
