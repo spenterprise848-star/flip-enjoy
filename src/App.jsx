@@ -78,6 +78,27 @@ const AppContent = () => {
           console.log(`[Analytics] Google gtag initialized with Analytics (${gaId || 'none'}) and Ads (${adsId || 'none'}).`);
         }
 
+        // 1b. Google Tag Manager (GTM) Setup
+        if (data.googleTagManagerId) {
+          const gtmRaw = data.googleTagManagerId;
+          const gtmMatch = gtmRaw.match(/(GTM-[A-Z0-9]+)/i);
+          const gtmId = gtmMatch ? gtmMatch[0] : gtmRaw.trim();
+
+          if (gtmId && !document.getElementById("google-tag-manager-script")) {
+            const inlineScript = document.createElement("script");
+            inlineScript.id = "google-tag-manager-script";
+            inlineScript.innerHTML = `
+              (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+              new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s),dl=l!='dataLayer'?'&dl='+l:'';j.async=true;j.src=
+              'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+              })(window,document,'script','dataLayer','${gtmId}');
+            `;
+            document.head.appendChild(inlineScript);
+            console.log(`[Analytics] Google Tag Manager (${gtmId}) initialized.`);
+          }
+        }
+
         // 2. Facebook Pixel Setup
         if (data.facebookPixelId) {
           const fbRaw = data.facebookPixelId;

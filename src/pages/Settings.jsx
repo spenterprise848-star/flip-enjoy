@@ -8,6 +8,7 @@ export const Settings = () => {
   const [facebookPixelId, setFacebookPixelId] = useState("");
   const [googleAnalyticsId, setGoogleAnalyticsId] = useState("");
   const [googleAdsId, setGoogleAdsId] = useState("");
+  const [googleTagManagerId, setGoogleTagManagerId] = useState("");
   const [upiId, setUpiId] = useState("");
   
   const [loading, setLoading] = useState(false);
@@ -27,6 +28,7 @@ export const Settings = () => {
         setFacebookPixelId(data.facebookPixelId || "");
         setGoogleAnalyticsId(data.googleAnalyticsId || "");
         setGoogleAdsId(data.googleAdsId || "");
+        setGoogleTagManagerId(data.googleTagManagerId || "");
         setUpiId(data.upiId || "");
         setFetching(false);
       })
@@ -53,6 +55,7 @@ export const Settings = () => {
         facebookPixelId,
         googleAnalyticsId,
         googleAdsId,
+        googleTagManagerId,
         upiId,
       }),
     })
@@ -169,6 +172,17 @@ export const Settings = () => {
                   className="w-full h-11 border border-gray-300 rounded-[4px] px-3 text-xs outline-none focus:border-flip-blue transition bg-white"
                   value={googleAdsId}
                   onChange={(e) => setGoogleAdsId(e.target.value)}
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-semibold text-gray-500 uppercase mb-1">Google Tag Manager Container ID</label>
+                <input
+                  type="text"
+                  placeholder="Paste your Google Tag Manager ID (e.g. GTM-XXXXXXX)"
+                  className="w-full h-11 border border-gray-300 rounded-[4px] px-3 text-xs outline-none focus:border-flip-blue transition bg-white"
+                  value={googleTagManagerId}
+                  onChange={(e) => setGoogleTagManagerId(e.target.value)}
                 />
               </div>
 

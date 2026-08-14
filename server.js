@@ -36,6 +36,7 @@ function getSettings() {
     facebookPixelId: "",
     googleAnalyticsId: "",
     googleAdsId: "",
+    googleTagManagerId: "",
     upiId: process.env.UPI_ID || "paytmqr5k5czz@ptys"
   };
 }
@@ -65,6 +66,7 @@ app.get('/api/settings', (req, res) => {
     facebookPixelId: config.facebookPixelId || "",
     googleAnalyticsId: config.googleAnalyticsId || "",
     googleAdsId: config.googleAdsId || "",
+    googleTagManagerId: config.googleTagManagerId || "",
     upiId: config.upiId || "paytmqr5k5czz@ptys"
   });
 });
@@ -78,19 +80,21 @@ app.get('/api/admin/settings', (req, res) => {
     facebookPixelId: config.facebookPixelId || "",
     googleAnalyticsId: config.googleAnalyticsId || "",
     googleAdsId: config.googleAdsId || "",
+    googleTagManagerId: config.googleTagManagerId || "",
     upiId: config.upiId || "paytmqr5k5czz@ptys"
   });
 });
 
 // 2. POST /api/admin/settings
 app.post('/api/admin/settings', (req, res) => {
-  const { razorpayKeyId, razorpayKeySecret, facebookPixelId, googleAnalyticsId, googleAdsId, upiId } = req.body;
+  const { razorpayKeyId, razorpayKeySecret, facebookPixelId, googleAnalyticsId, googleAdsId, googleTagManagerId, upiId } = req.body;
   const newConfig = {
     razorpayKeyId: (razorpayKeyId || "").trim(),
     razorpayKeySecret: (razorpayKeySecret || "").trim(),
     facebookPixelId: (facebookPixelId || "").trim(),
     googleAnalyticsId: (googleAnalyticsId || "").trim(),
     googleAdsId: (googleAdsId || "").trim(),
+    googleTagManagerId: (googleTagManagerId || "").trim(),
     upiId: (upiId || "paytmqr5k5czz@ptys").trim()
   };
   try {
