@@ -14,16 +14,11 @@ export const Payment = () => {
   const { cart, setLoadingOverlay } = useContext(AppContext);
   const os = detectOS();
 
-  const [upiId, setUpiId] = useState(import.meta.env.VITE_UPI_ID || "paytmqr5k5czz@ptys");
+  const [upiId, setUpiId] = useState("paytmqr5k5czz@ptys");
   const [selectedUpi, setSelectedUpi] = useState("phonepe");
 
   // Fetch settings to get dynamic UPI ID
   useEffect(() => {
-    if (import.meta.env.VITE_UPI_ID) {
-      setUpiId(import.meta.env.VITE_UPI_ID);
-      return;
-    }
-
     fetch("/api/settings")
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch settings");
