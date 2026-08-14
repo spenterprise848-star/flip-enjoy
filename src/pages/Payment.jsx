@@ -25,7 +25,7 @@ export const Payment = () => {
         return res.json();
       })
       .then((data) => {
-        if (data.upiId) {
+        if (data.upiId !== undefined) {
           setUpiId(data.upiId);
         }
       })

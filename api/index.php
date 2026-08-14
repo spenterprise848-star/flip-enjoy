@@ -84,7 +84,8 @@ if (preg_match('/\/api\/settings$/', $path)) {
         echo json_encode([
             "razorpayKeyId" => $config["razorpayKeyId"],
             "facebookPixelId" => $config["facebookPixelId"] ?? "",
-            "googleAnalyticsId" => $config["googleAnalyticsId"] ?? ""
+            "googleAnalyticsId" => $config["googleAnalyticsId"] ?? "",
+            "upiId" => $config["upiId"] ?? "paytmqr5k5czz@ptys"
         ]);
         exit;
     }
