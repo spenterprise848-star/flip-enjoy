@@ -25,7 +25,7 @@
     "color": "Default",
     "size": "Free Size",
     "storage": "",
-    "selling_price": "249.00",
+    "selling_price": "199.00",
     "mrp": "9999.00",
     "features": "",
     "img1": "/images/products/13_1.jpg",
@@ -219,27 +219,6 @@
     "from_csv": "1",
     "created_at": "2026-06-16 17:09:40"
   },
-  {
-    "id": "9",
-    "name": "Nothing Phone (2a) Plus 5G (Black, 12GB RAM + 256GB Storage)",
-    "color": "Default",
-    "size": "Free Size",
-    "storage": "",
-    "selling_price": "389.00",
-    "mrp": "21999.00",
-    "features": "",
-    "img1": "/images/products/9_1.jpg",
-    "img2": "",
-    "img3": "",
-    "img4": "",
-    "img5": "",
-    "category": "Mobile",
-    "keywords": "",
-    "disp_order": "10",
-    "from_csv": "1",
-    "created_at": "2026-06-16 17:09:40"
-  },
-  
   {
     "id": "11",
     "name": "Skechers GO WALK ARCH FIT 2.0 - IDYLLI",
